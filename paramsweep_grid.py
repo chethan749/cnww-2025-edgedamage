@@ -66,38 +66,39 @@ def plot_example(m,n):
 #
 
 
-# plot and export some examples.
-for example in [(2,2), (2,3), (3,2), (8,3), (8,4)]:
-    fig,ax = plot_example(*example)
-    fig.savefig(OUT_FOLDER + f'grid_{example}.png', dpi=300, bbox_inches='tight')
+if __name__=="__main__":
+    # plot and export some examples.
+    for example in [(2,2), (2,3), (3,2), (8,3), (8,4)]:
+        fig,ax = plot_example(*example)
+        fig.savefig(OUT_FOLDER + f'grid_{example}.png', dpi=300, bbox_inches='tight')
 
 
-#########
-ms = np.arange(2,21)
-ns = np.arange(2,21)
+    #########
+    ms = np.arange(2,21)
+    ns = np.arange(2,21)
 
-if False:
-    inputs = itertools.product(ms,ns)       
+    if False:
+        inputs = itertools.product(ms,ns)       
 
-    p = multiprocessing.Pool(1)
-    results = p.map(comparison, inputs)
-    ratios = [r[0]/r[1] for r in results]
-    R = np.reshape(ratios, (len(ms), len(ns)))
+        p = multiprocessing.Pool(1)
+        results = p.map(comparison, inputs)
+        ratios = [r[0]/r[1] for r in results]
+        R = np.reshape(ratios, (len(ms), len(ns)))
 
-else:
-    R = np.zeros((len(ms), len(ns)))
-    for i,m in enumerate(ms):
-        for j,n in enumerate(ns):
-            ratio = comparison((m,n))
-            R[i,j] = ratio[0]/ratio[1]
-    #
+    else:
+        R = np.zeros((len(ms), len(ns)))
+        for i,m in enumerate(ms):
+            for j,n in enumerate(ns):
+                ratio = comparison((m,n))
+                R[i,j] = ratio[0]/ratio[1]
+        #
 
-fig2,ax2 = plt.subplots()
+    fig2,ax2 = plt.subplots()
 
-# TODO: better visualization which properly labels the axes.
-cax = ax2.matshow(R.T, cmap=plt.cm.PRGn, vmin=0, vmax=2)
+    # TODO: better visualization which properly labels the axes.
+    cax = ax2.matshow(R.T, cmap=plt.cm.PRGn, vmin=0, vmax=2)
 
-fig2.colorbar(cax)
-fig2.show()
-fig2.savefig(OUT_FOLDER+'oneway_grids_paramsweep.png', dpi=300, bbox_inches='tight')
+    fig2.colorbar(cax)
+    fig2.show()
+    fig2.savefig(OUT_FOLDER+'oneway_grids_paramsweep.png', dpi=300, bbox_inches='tight')
 
