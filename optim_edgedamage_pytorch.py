@@ -55,28 +55,81 @@ def markov_metrics(P):
 class damn_edge(nn.Module):
     def __init__(self, adj):
         super().__init__()
+        
+        
         self.flatten = nn.Flatten() # needed?
         self.A0 = torch.Tensor(adj)
-        self.n = self.A.shape[0]
+        self.n = self.A0.shape[0]
+        
+        # make optimizeable via nn.Parameter
+        self.B = nn.Parameter(torch.zeros((self.n,self.n)), requires_grad=True)
+        
         self.P0 = torch.reshape((1/torch.sum(self.A0, axis=1)),(self.n,1)) * self.A0
         return
 
     def forward(self, x):
         '''
-        in: an adjacency matrix of modifications.
+        in: an adjacency matrix of modifications (can/should be negative for 
+        edge deletions)
+        
         out: directed travel time.
         '''
-        _A = torch.Tensor(self.A0 + x)
-        _P = torch.reshape((1/torch.sum(self._A, axis=1)),(self.n,1)) * _A
         
-        return loss
+        I = torch.eye(self.n)
+        #e = np.ones(n, dtype=int)
+        e = torch.ones(self.n)
+        
+        _A = torch.Tensor(self.A0 + x)
+        _P = torch.reshape((1/torch.sum(_A, axis=1)),(self.n,1)) * _A
+        ev,lv = torch.linalg.eig(_P) # eig values and left eig vectors
+        ev = torch.real(ev)
+        lv = torch.real(lv)
+        
+        ix = torch.argsort(ev)[-1]
+        dom_eigenvector = lv[:,ix]
+        pi = (1/torch.sum(dom_eigenvector))*dom_eigenvector # probabiltiy vector
+        
+        
+        # calculate the fundamental matrix Z
+        W = torch.outer(e,pi)
+        
+        Z = torch.linalg.inv(I - _P + W)
+
+        # construct the mean first passage matrix M
+        E = torch.ones((self.n,self.n))
+        Z_diag = torch.diag(torch.diag(Z))
+        D = torch.diag(1/pi)
+        mat1 = (I - Z + E@Z_diag)
+        M = mat1@D
+        M = M - torch.diag(torch.diag(M))
+
+        # calculate the global time tau
+        pi_mat = torch.outer(pi,e) # pi in every column
+        tau_mat = pi_mat * M 
+        tau_i = torch.sum(tau_mat,axis=0) # vector of tau values
+        
+        tau_global = torch.sum(tau_i) / self.n
+        
+        # total mass penalty.
+        _l = torch.abs(torch.abs(torch.sum(x.flatten())) - 2)
+        
+        #return tau_global + _l
+        return _l
     #
-    def train(self, nit=100):
+    
+    def train(self, nit=1000, lr=1e-6):
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+        
         for k in range(nit):
-            tau = self.forward()
-            print(r'{k} : {tau:.2f}')
-            optimizer.step()
+            tau = self(self.B)
+            tau.backward()
+            optimizer.step() # descend
+            
+            
             optimizer.zero_grad()
+            if k%100==0:
+                print(f'{k} : {tau:.2f}')
+        return self.B
 
 
 if __name__=="__main__":
@@ -89,3 +142,5 @@ if __name__=="__main__":
     G = tools.directed_rectangle(2,3)
     A = nx.to_numpy_array(G)
     model = damn_edge(A)
+    model.train(1000, lr=1e-1)
+    
