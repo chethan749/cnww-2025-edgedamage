@@ -1,0 +1,27 @@
+Putting some things down to look at later. -- Manuch (24 Dec 2025)
+Tried out the new Google Scholar for the fun of it with this 
+(allows for follow-up queries; seems to register a history at least)
+
+1. Zhang et al, 2007. Enhancing the transmission efficiency by edge deletion in scale-free networks 
+https://journals.aps.org/pre/abstract/10.1103/PhysRevE.76.017101
+
+2. Bellingeri et al, 2020. Link and Node Removal in Real Social Networks: A Review
+https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2020.00228/full
+
+3. Freitas et al 2023: Graph Vulnerability and Robustness: A Survey
+https://ieeexplore.ieee.org/abstract/document/9745316?casa_token=6341y2qpwBsAAAAA:GQcvmsDBTlOZeaycpmxx7jTvzl6UGiqESugxg7B9Mvp7iZ6sp2sZzVZIaVuTvpcWrUySdpSYhg
+
+4. Liu et al, 2007: Method to enhance traffic capacity for scale-free networks
+https://journals.aps.org/pre/abstract/10.1103/PhysRevE.76.037101
+
+5. Santiago and Benito, 2009: Robustness of heterogeneous complex networks
+https://www.sciencedirect.com/science/article/pii/S0378437109001496?casa_token=xZxvKJO4RYoAAAAA:eXyOWq6ZZpCAFv5ihjWUdXLFAc_DP_2NSJy01DSC3l27AF8GGDTc2yNl3JG5Pz1SVTUDFXeoJZY
+
+"Are there any notable papers prior to the year 2000?"
+
+6. Boyce et al, 1973: Optimal Network Problem: A Branch-and-Bound Algorithm
+https://journals.sagepub.com/doi/abs/10.1068/a050519
+
+7. Minoux, 1989: Networks synthesis and optimum network design problems: Models, solution methods and applications
+https://onlinelibrary.wiley.com/doi/abs/10.1002/net.3230190305?casa_token=Ihk0ukVogLoAAAAA%3AY2RFkBvZvy9af3d1BvdmnJ3cbHAjSeStpmgNnc9CqJQEgE5b654btwmkEb2Dtms4p6nFu0GOgLGMJDQ
+
